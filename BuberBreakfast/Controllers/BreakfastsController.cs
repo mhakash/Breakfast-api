@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BuberBreakfast.Controllers;
 
 [ApiController]
-[Route("breakfasts")]
+[Route("[controller]")]
 public class BreakfastsController : ControllerBase
 {
     private readonly IBreakfastService _breakfastService;
@@ -53,7 +53,17 @@ public class BreakfastsController : ControllerBase
     public IActionResult GetBreakfast(Guid id)
     {
         var breakfast = _breakfastService.GetBreakfast(id);
-        return Ok(breakfast);
+        var response = new BreakfastResponse(
+            breakfast.Id,
+            breakfast.Name,
+            breakfast.Description,
+            StartDateTime: breakfast.StarDateTime,
+            EndDateTime: breakfast.EndDateTime,
+            LastModifiedDateTime: breakfast.LastModifiedDateTime,
+            Savory: breakfast.Savory,
+            Sweet: breakfast.Sweet);
+        
+        return Ok(response);
     }
 
     [HttpPut("{id:guid}")]
